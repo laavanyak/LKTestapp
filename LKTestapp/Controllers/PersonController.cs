@@ -22,12 +22,16 @@ namespace LKTestapp.Controllers
         }
 
         // GET api/values/5
-        public BsonDocument Get([FromUri] string name)
+        public BsonDocument Get(string name)
         {
 
-            return new BsonDocument {
-                { "name",  name }
-            };
+            var client = new MongoClient("mongodb://lkdbdataadmin:admindata@ds044989.mlab.com:44989/lkdb");
+            var database = client.GetDatabase("lkdb");
+            var collection = database.GetCollection<BsonDocument>("People");
+            var filter = Builders<BsonDocument>.Filter.Eq("gender", "male");
+            var document = collection.Find(filter).First();
+            Console.WriteLine(document);
+            return document;
         }
 
         // POST api/values
